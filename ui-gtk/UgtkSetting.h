@@ -184,6 +184,7 @@ struct UgtkSetting
 		int    quiet;
 		int    nth_category;
 		int    website;
+		int    whole_url;
 	} clipboard;
 
 	// "BandwidthSetting" - global speed limits

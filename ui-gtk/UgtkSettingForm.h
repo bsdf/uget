@@ -62,6 +62,9 @@ struct UgtkClipboardForm
 
 	// Monitor media website address
 	GtkToggleButton*    website;
+
+	// Match pattern against entire URL
+	GtkToggleButton*    match_whole_url;
 };
 
 void  ugtk_clipboard_form_init (struct UgtkClipboardForm* cbform);

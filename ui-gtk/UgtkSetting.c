@@ -248,6 +248,9 @@ static const UgEntry  UgtkClipboardSettingEntry[] =
 	{"Website", offsetof (struct UgtkClipboardSetting, website),
 			UG_ENTRY_BOOL,   NULL,  NULL},
 
+	{"MatchWholeUrl", offsetof (struct UgtkClipboardSetting, whole_url),
+			UG_ENTRY_BOOL,   NULL,  NULL},
+
 	// remove this in future verison
 	{"MediaWebsite", offsetof (struct UgtkClipboardSetting, website),
 			UG_ENTRY_BOOL,   NULL,  NULL},
@@ -404,6 +407,7 @@ void  ugtk_setting_init (UgtkSetting* setting)
 
 	// default settings for media (or storage) website
 	setting->clipboard.website = TRUE;
+	setting->clipboard.whole_url = FALSE;
 	setting->media.match_mode = UGET_MEDIA_MATCH_NEAR;
 	setting->media.quality = UGET_MEDIA_QUALITY_360P;
 	setting->media.type = UGET_MEDIA_TYPE_MP4;
@@ -476,6 +480,7 @@ void  ugtk_setting_reset (UgtkSetting* setting)
 	ug_free (setting->clipboard.pattern);
 	setting->clipboard.pattern = ug_strdup (UGTK_APP_CLIPBOARD_PATTERN);
 	setting->clipboard.monitor = TRUE;
+	setting->clipboard.whole_url = FALSE;
 	setting->clipboard.quiet = FALSE;
 	setting->clipboard.nth_category = 0;
 	setting->clipboard.website = TRUE;

@@ -116,6 +116,8 @@ struct UgtkApp
 		gboolean       processing;
 		// monitor storage or media website
 		gboolean       website;
+		// match patterns against whole url
+		gboolean       whole_url;
 	} clipboard;
 
 	// dialogs

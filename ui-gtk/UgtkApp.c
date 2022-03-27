@@ -563,6 +563,7 @@ void  ugtk_app_set_other_setting (UgtkApp* app, UgtkSetting* setting)
 	// clipboard & commandline
 	ugtk_clipboard_set_pattern (&app->clipboard, setting->clipboard.pattern);
 	app->clipboard.website = app->setting.clipboard.website;
+	app->clipboard.whole_url = app->setting.clipboard.whole_url;
 	// global speed limit
 	uget_task_set_speed (&app->task,
 			setting->bandwidth.normal.download * 1024,
@@ -1842,6 +1843,7 @@ void  ugtk_clipboard_init (struct UgtkClipboard* clipboard, const gchar* pattern
 	clipboard->text  = NULL;
 	clipboard->regex = g_regex_new (pattern, G_REGEX_CASELESS, 0, NULL);
 	clipboard->website = TRUE;
+	clipboard->whole_url = FALSE;
 }
 
 void  ugtk_clipboard_set_pattern (struct UgtkClipboard* clipboard, const gchar* pattern)
@@ -1903,14 +1905,21 @@ GList* ugtk_clipboard_get_matched (struct UgtkClipboard* clipboard, const gchar*
 	list = ugtk_uri_list_remove_scheme (list, "file");
 	// filter by filename extension
 	for (link = list;  link;  link = link->next) {
-		temp = ug_filename_from_uri (link->data);
-		// get filename extension
-		if (temp)
-			text = strrchr (temp, '.');
-		else
-			text = NULL;
+		if (clipboard->whole_url) {
+			text = link->data;
+		} else {
+			temp = ug_filename_from_uri (link->data);
+			// get filename extension
+			if (temp) {
+				text = strrchr (temp, '.');
+				++text;
+			} else {
+				text = NULL;
+			}
+		}
+
 		// free URIs if not matched
-		if (text == NULL || g_regex_match (clipboard->regex, text+1, 0, NULL) == FALSE) {
+		if (text == NULL || g_regex_match (clipboard->regex, text, 0, NULL) == FALSE) {
 			// storage or media website
 			if (clipboard->website == FALSE ||
 			     uget_site_get_id (link->data) == UGET_SITE_UNKNOWN)
@@ -1919,7 +1928,9 @@ GList* ugtk_clipboard_get_matched (struct UgtkClipboard* clipboard, const gchar*
 				link->data = NULL;
 			}
 		}
-		ug_free (temp);
+
+		if (!clipboard->whole_url)
+			ug_free (temp);
 	}
 	list = g_list_remove_all (list, NULL);
 	return list;
