@@ -1465,7 +1465,7 @@ msgstr "添加到第N個分類，如果沒有匹配的類別。"
 
 #. media or storage website
 #: ../ui-gtk/UgtkSettingForm.c:90
-msgid "_Monitor URL of website"
+msgid "_Check for Mega/YouTube URLs"
 msgstr "監視網站的 URL"
 
 #: ../ui-gtk/UgtkSettingForm.c:105
